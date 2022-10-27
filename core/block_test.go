@@ -1,73 +1,29 @@
 package core
 
 import (
-	"bytes"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/chalfel/complete-blockchain/types"
-	"github.com/stretchr/testify/assert"
 )
 
-func TestHeader_Encode_Decode(t *testing.T) {
-	h := &Header{
-		Version:   1,
-		PrevBlock: types.RandomHash(),
-		Timestamp: time.Now().UnixNano(),
-		Height:    10,
-		Nonce:     989394,
+func randomBlock(height uint32) *Block {
+	header := &Header{
+		Version:       1,
+		PrevBlockHash: types.RandomHash(),
+		Height:        height,
+		Timestamp:     time.Now().UnixNano(),
 	}
 
-	buf := &bytes.Buffer{}
+	tx := Transaction{
+		Data: []byte("foo"),
+	}
 
-	assert.Nil(t, h.EncodeBinary(buf))
-
-	hDecoded := &Header{}
-
-	assert.Nil(t, hDecoded.DecoreBinary(buf))
-	assert.Equal(t, h, hDecoded)
+	return NewBlock(header, []Transaction{tx})
 }
+func TestHashBlock(t *testing.T) {
+	b := randomBlock(0)
 
-func TestBlock_Encode_Decode(t *testing.T) {
-	h := Header{
-		Version:   1,
-		PrevBlock: types.RandomHash(),
-		Timestamp: time.Now().UnixNano(),
-		Height:    10,
-		Nonce:     989394,
-	}
-
-	b := &Block{
-		Header:       h,
-		Transactions: nil,
-	}
-
-	buf := &bytes.Buffer{}
-
-	assert.Nil(t, b.EncodeBinary(buf))
-
-	blockDecoded := &Block{}
-
-	assert.Nil(t, blockDecoded.DecoreBinary(buf))
-	assert.Equal(t, b, blockDecoded)
-}
-
-func TestBlockHash(t *testing.T) {
-	h := Header{
-		Version:   1,
-		PrevBlock: types.RandomHash(),
-		Timestamp: time.Now().UnixNano(),
-		Height:    10,
-		Nonce:     989394,
-	}
-
-	b := &Block{
-		Header:       h,
-		Transactions: nil,
-	}
-
-	hash := b.Hash()
-	fmt.Println(hash)
-	assert.False(t, hash.IsZero())
+	fmt.Println(b.Hash(BlockHasher{}))
 }

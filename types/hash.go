@@ -27,7 +27,7 @@ func (h *Hash) toSlice() []byte {
 	return b
 }
 
-func (h *Hash) String() string {
+func (h Hash) String() string {
 	return hex.EncodeToString(h.toSlice())
 }
 

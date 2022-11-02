@@ -12,25 +12,22 @@ func TestKeypairSignVerifySuccess(t *testing.T) {
 	msg := []byte("hello world")
 
 	sig, err := privKey.Sign(msg)
-
 	assert.Nil(t, err)
 
 	assert.True(t, sig.Verify(publicKey, msg))
-
 }
 
 func TestKeypairSignVerifyFail(t *testing.T) {
 	privKey := GeneratePrivateKey()
-	publicKey := privKey.PublicKey()
+	PublicKey := privKey.PublicKey()
 	msg := []byte("hello world")
 
 	sig, err := privKey.Sign(msg)
-
 	assert.Nil(t, err)
 
 	otherPrivKey := GeneratePrivateKey()
-	otherPublickKey := otherPrivKey.PublicKey()
+	otherPublicKey := otherPrivKey.PublicKey()
 
-	assert.False(t, sig.Verify(otherPublickKey, msg))
-	assert.False(t, sig.Verify(publicKey, []byte("xxxxxx")))
+	assert.False(t, sig.Verify(otherPublicKey, msg))
+	assert.False(t, sig.Verify(PublicKey, []byte("xxxxxx")))
 }
